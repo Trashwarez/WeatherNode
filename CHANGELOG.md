@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2026.09.4] - 2026-09-09
+
+- Fix DWD going quiet for a week after one failed lookup. If the nearest station could not be found once, the empty result was remembered for seven days and every later update returned without even trying. Nothing cleared it (#99)
+- The forecast log now names the source it is polling. It used to say "forecast service", which told you nothing about what had failed
+- A failed update no longer marks the old forecast as freshly fetched, so a source that has been failing for days is reported instead of looking healthy
+- The "Offline" badge no longer appears over a forecast that is on the page and correct, and it warns when the forecast has stopped updating rather than only when it is missing
+
 ## [2026.09.3] - 2026-09-06
 
 - Fix every forecast source except Yr.no going dark after a while. An API key that could not be read came back as null and crashed the forecast poller before it saved anything, which in Docker happens when APP_KEY is not kept across container recreations (#99)
