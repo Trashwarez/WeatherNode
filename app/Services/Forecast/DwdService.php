@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Support\CacheFreshness;
 use App\Support\ForecastCacheKeys;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use SimpleXMLElement;
@@ -97,12 +98,30 @@ class DwdService implements ForecastServiceInterface
 
         $latitude = Setting::latitude();
         $longitude = Setting::longitude();
+        $key = 'dwd_nearest_station_'.round($latitude, 3).'_'.round($longitude, 3);
 
-        return (string) CacheFreshness::remember(
-            'dwd_nearest_station_'.round($latitude, 3).'_'.round($longitude, 3),
-            86400 * 7,
-            fn () => $this->nearestStation($latitude, $longitude) ?? ''
-        );
+        $cached = Cache::get($key);
+        if (is_string($cached) && $cached !== '') {
+            return $cached;
+        }
+
+        $station = $this->nearestStation($latitude, $longitude);
+
+        if ($station === null || $station === '') {
+            // Do not remember a failure. Caching '' here pinned DWD for seven
+            // days: every later poll returned before making a request or
+            // writing a log line, so it looked like nothing was happening.
+            Log::warning('DWD station lookup failed, will retry on the next poll', [
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+            ]);
+
+            return '';
+        }
+
+        Cache::put($key, $station, now()->addDays(7));
+
+        return $station;
     }
 
     private function nearestStation(float $latitude, float $longitude): ?string

@@ -782,10 +782,14 @@ class PollExternalData extends Command
             // handing back its own cached copy, but a failed fetch used to
             // leave both keys empty and the message below was a lie: one bad
             // poll turned into an empty forecast until the next good one.
-            $previous = [
-                $sourceCacheKey => Cache::get($sourceCacheKey),
-                $cacheKey => Cache::get($cacheKey),
-            ];
+            $previous = [];
+            foreach ([$sourceCacheKey, $cacheKey] as $key) {
+                $previous[$key] = [
+                    'payload' => Cache::get($key),
+                    // Read the raw stamp so it can be written back exactly as it was.
+                    'updated_at' => Cache::get($key.'_updated_at'),
+                ];
+            }
 
             // Force fresh API fetch: clear cache so the service doesn't return stale data
             // (otherwise we keep re-caching the same old forecast and "today" drifts, leaving fewer days)
@@ -869,6 +873,8 @@ class PollExternalData extends Command
             'fct_wxsim_block.php' => 'WXSIM',
             'fct_ec_block.php' => 'Environment Canada',
             'fct_tempest_block.php' => 'WeatherFlow Tempest',
+            'fct_aemet_block.php' => 'AEMET',
+            'fct_dwd_block.php' => 'DWD',
         ];
         return $names[$source] ?? 'forecast service';
     }
@@ -882,9 +888,20 @@ class PollExternalData extends Command
      */
     private function restoreForecast(array $previous): void
     {
-        foreach ($previous as $key => $payload) {
-            if (is_array($payload) && !empty($payload['forecast'])) {
-                CacheFreshness::put($key, $payload, now()->addMinutes($this->cacheTTLs['forecast']));
+        foreach ($previous as $key => $entry) {
+            $payload = $entry['payload'] ?? null;
+
+            if (!is_array($payload) || empty($payload['forecast'])) {
+                continue;
+            }
+
+            Cache::put($key, $payload, now()->addMinutes($this->cacheTTLs['forecast']));
+
+            // Put the original timestamp back, not now(). Stamping a restored
+            // forecast as fresh is how a source that has been failing for days
+            // keeps reporting itself healthy.
+            if (!empty($entry['updated_at'])) {
+                Cache::put($key.'_updated_at', $entry['updated_at'], now()->addMinutes($this->cacheTTLs['forecast']));
             }
         }
     }

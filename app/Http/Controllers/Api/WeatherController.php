@@ -122,14 +122,16 @@ class WeatherController extends Controller
         // If we only have 1–2 days, cache is likely stale (poll may be failing). Force a fresh
         // fetch so the next request gets the full 9 days from Yr.no.
         if ($source === 'fct_yrno_block.php' && count($daily) < 3 && is_array($forecast) && count($forecast) > 12) {
-            $cacheKey = $sourceKeys[$source] ?? null;
+            // $sourceKeys no longer exists here, so this whole block became
+            // dead code when the key map moved to ForecastCacheKeys.
+            $cacheKey = \App\Support\ForecastCacheKeys::forSource($source, $latitude, $longitude);
             if ($cacheKey) {
                 Cache::forget($cacheKey);
                 Cache::forget("forecast_{$latitude}_{$longitude}");
                 $fresh = ForecastServiceFactory::make()->fetchForecast();
                 if ($fresh && isset($fresh['forecast']) && count($fresh['forecast']) > 12) {
-                    Cache::put($cacheKey, $fresh, now()->addMinutes(120));
-                    Cache::put("forecast_{$latitude}_{$longitude}", $fresh, now()->addMinutes(120));
+                    \App\Support\CacheFreshness::put($cacheKey, $fresh, now()->addMinutes(120));
+                    \App\Support\CacheFreshness::put(\App\Support\ForecastCacheKeys::generic($latitude, $longitude), $fresh, now()->addMinutes(120));
                     $forecast = $fresh['forecast'];
                     $daily = $this->extractDailyForecast($forecast, 14) ?? [];
                     $hourly = $this->extractHourlyForecast($forecast, 48) ?? [];
