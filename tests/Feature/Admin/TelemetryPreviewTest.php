@@ -76,6 +76,18 @@ class TelemetryPreviewTest extends TestCase
         $this->assertSame('https://my.station.example', $data['url']);
     }
 
+    /** The stored value is a key. A person reads the name. */
+    public function test_the_maker_is_shown_by_name(): void
+    {
+        $this->seed(SettingsSeeder::class);
+        Setting::setValue('station.manufacturer', 'davis', 'select', 'station');
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.settings.telemetry'))
+            ->assertSee('Davis Instruments')
+            ->assertDontSee('>davis<', false);
+    }
+
     /** An empty cell says nothing. The page has an N/A for this. */
     public function test_unknown_hardware_reads_as_not_available(): void
     {
