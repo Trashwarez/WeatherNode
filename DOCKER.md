@@ -66,6 +66,16 @@ Run commands from the repository root (the folder containing `docker-compose.yml
    docker compose exec app php artisan weather:poll-external --force
    ```
 
+### Which image tag to run
+
+| Tag | What it is |
+| --- | --- |
+| `latest` | the newest release. What `docker-compose.yml` uses, and what you want |
+| `v2026.09.4` and so on | one specific release, pinned |
+| `edge` | the tip of `main`, built on every merge. Unreleased work, no release notes, and no promise it behaves |
+
+`latest` followed `main` until September 2026, so an older compose file pulling `latest` was tracking unreleased commits. It now moves only when a release is tagged.
+
 If you changed `Dockerfile` or other build-time files, rebuild with:
 
 ```bash
