@@ -137,11 +137,11 @@ class SettingsSeeder extends Seeder
             ['key' => 'davis_aq.sensor_id', 'value' => '0', 'type' => 'string', 'group' => 'airquality', 'description' => 'Davis AirLink sensor ID'],
 
             // ===== Aviation/METAR =====
-            ['key' => 'metar.enabled', 'value' => '1', 'type' => 'boolean', 'group' => 'aviation', 'description' => 'Enable METAR data display'],
+            ['key' => 'metar.enabled', 'value' => '0', 'type' => 'boolean', 'group' => 'aviation', 'description' => 'Enable METAR data display'],
             ['key' => 'metar.api_key', 'value' => '', 'type' => 'encrypted', 'group' => 'aviation', 'description' => 'CheckWX API key'],
-            ['key' => 'metar.primary_icao', 'value' => 'EHAM', 'type' => 'string', 'group' => 'aviation', 'description' => 'Primary ICAO airport code'],
-            ['key' => 'metar.airport_name', 'value' => 'AMS', 'type' => 'string', 'group' => 'aviation', 'description' => 'Airport short name'],
-            ['key' => 'metar.airport_distance', 'value' => '34', 'type' => 'integer', 'group' => 'aviation', 'description' => 'Distance to airport (km)'],
+            ['key' => 'metar.primary_icao', 'value' => '', 'type' => 'string', 'group' => 'aviation', 'description' => 'Primary ICAO airport code'],
+            ['key' => 'metar.airport_name', 'value' => '', 'type' => 'string', 'group' => 'aviation', 'description' => 'Airport short name'],
+            ['key' => 'metar.airport_distance', 'value' => '0', 'type' => 'integer', 'group' => 'aviation', 'description' => 'Distance to airport (km)'],
             ['key' => 'metar.show_popup', 'value' => '1', 'type' => 'boolean', 'group' => 'aviation', 'description' => 'Show METAR popup details'],
 
             // ===== Marine data location =====

@@ -1757,7 +1757,7 @@ class SettingsController extends Controller
 
                 case 'checkwx':
                     $svc = app(\App\Services\Aviation\MetarService::class);
-                    $data = $svc->fetchMetar([Setting::getValue('metar.primary_icao', 'EHAM')]);
+                    $data = $svc->fetchMetar([Setting::getValue('metar.primary_icao', '')]);
                     $result = $data ? 
                         ['success' => true, 'message' => 'CheckWX connection successful!'] :
                         ['success' => false, 'message' => 'No METAR data returned'];

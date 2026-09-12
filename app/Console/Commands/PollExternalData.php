@@ -262,7 +262,7 @@ class PollExternalData extends Command
                 return $data && is_array($data) && isset($data['kp']);
 
             case 'metar':
-                $icao = Setting::getValue('metar.primary_icao', 'EHAM');
+                $icao = Setting::getValue('metar.primary_icao', '');
                 $data = Cache::get("metar_{$icao}");
                 return $data && is_array($data) && !empty($data);
 
@@ -1034,7 +1034,7 @@ class PollExternalData extends Command
 
         try {
             $service = app(MetarService::class);
-            $primaryIcao = Setting::getValue('metar.primary_icao', 'EHAM');
+            $primaryIcao = Setting::getValue('metar.primary_icao', '');
             $icaoArray = [$primaryIcao];
             $cacheKey = "metar_{$primaryIcao}";
 
