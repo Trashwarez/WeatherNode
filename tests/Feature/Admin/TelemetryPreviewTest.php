@@ -51,6 +51,43 @@ class TelemetryPreviewTest extends TestCase
     }
 
     /**
+     * The seeder says "leave empty to use APP_URL", but an empty row is not a
+     * missing one: getValue hands back the blank and the default never fires.
+     * A station shared with no address cannot be linked to from the map.
+     */
+    public function test_a_blank_server_url_falls_back_to_the_site_address(): void
+    {
+        $this->seed(SettingsSeeder::class);
+        config(['app.url' => 'https://weather.example.com']);
+        Setting::setValue('station.server_url', '', 'string', 'station');
+
+        $data = app(\App\Services\Telemetry\TelemetryService::class)->previewStationData();
+
+        $this->assertSame('https://weather.example.com', $data['url']);
+    }
+
+    public function test_a_server_url_that_is_set_is_the_one_used(): void
+    {
+        $this->seed(SettingsSeeder::class);
+        Setting::setValue('station.server_url', 'https://my.station.example/', 'string', 'station');
+
+        $data = app(\App\Services\Telemetry\TelemetryService::class)->previewStationData();
+
+        $this->assertSame('https://my.station.example', $data['url']);
+    }
+
+    /** An empty cell says nothing. The page has an N/A for this. */
+    public function test_unknown_hardware_reads_as_not_available(): void
+    {
+        $this->seed(SettingsSeeder::class);
+        Setting::setValue('station.hardware', '', 'string', 'station');
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.settings.telemetry'))
+            ->assertSee('N/A');
+    }
+
+    /**
      * Showing it is not sharing it. Nothing may be sent while the setting is
      * off, whatever the page displays.
      */

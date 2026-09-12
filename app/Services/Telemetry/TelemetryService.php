@@ -28,7 +28,11 @@ class TelemetryService
             $manufacturer = Setting::getValue('station.manufacturer', '');
             $latitude = Setting::latitude();
             $longitude = Setting::longitude();
-            $serverUrl = Setting::getValue('station.server_url', config('app.url', ''));
+            // A blank row is not a missing one: getValue hands back the blank,
+            // so the seeder's "leave empty to use APP_URL" never happened and a
+            // station was shared with no address to link to.
+            $serverUrl = trim((string) Setting::getValue('station.server_url', ''))
+                ?: (string) config('app.url', '');
             
             // Generate unique station ID (hash of URL + name)
             $stationId = $this->generateStationId($serverUrl, $name);

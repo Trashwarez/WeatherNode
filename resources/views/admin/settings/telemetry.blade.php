@@ -92,15 +92,15 @@
                     </div>
                     <div>
                         <span class="text-gray-500 dark:text-gray-400">{{ __('Hardware') }}:</span>
-                        <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $stationData['hardware'] ?? __('N/A') }}</span>
+                        <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $stationData['hardware'] ?: __('N/A') }}</span>
                     </div>
                     <div>
                         <span class="text-gray-500 dark:text-gray-400">{{ __('Manufacturer') }}:</span>
-                        <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $stationData['manufacturer'] ?? __('N/A') }}</span>
+                        <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $stationData['manufacturer'] ?: __('N/A') }}</span>
                     </div>
                     <div>
                         <span class="text-gray-500 dark:text-gray-400">{{ __('Country') }}:</span>
-                        <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $stationData['country_code'] ?? __('N/A') }}</span>
+                        <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ $stationData['country_code'] ?: __('N/A') }}</span>
                     </div>
                     <div>
                         <span class="text-gray-500 dark:text-gray-400">{{ __('Location') }}:</span>
