@@ -499,7 +499,7 @@ Route::post('/widgets/order', [\App\Http\Controllers\Api\WeatherController::clas
 */
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['auth', 'admin'])
+    ->middleware(['auth', 'admin', 'setup.pending'])
     ->group(function () {
         // Admin Dashboard
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');

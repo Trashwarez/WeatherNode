@@ -68,6 +68,8 @@
     "Setup progress": "Voortgang van de installatie",
     "Shown in the header, the page titles and the footer.": "Te zien in de kop, de paginatitels en de voettekst.",
     "Station name": "Stationsnaam",
+    "The station needs a latitude. Blank is not the same as unknown: it would be read as zero, which is a place in the Gulf of Guinea.": "Het station heeft een breedtegraad nodig. Leeg is niet hetzelfde als onbekend: het wordt gelezen als nul, en dat is een plek in de Golf van Guinee.",
+    "The station needs a longitude.": "Het station heeft een lengtegraad nodig.",
     "The town or area, written the way you would say it.": "De plaats of streek, zoals je het zelf zou zeggen.",
     "This install does not know where it is yet, so forecasts, sunrise times and warnings have nothing to go on. It takes a minute.": "Deze installatie weet nog niet waar hij staat, dus verwachtingen, zonsopkomst en waarschuwingen hebben niets om op te bouwen. Het kost een minuut.",
     "Use my location": "Gebruik mijn locatie",

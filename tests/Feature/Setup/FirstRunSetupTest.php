@@ -88,16 +88,6 @@ class FirstRunSetupTest extends TestCase
         $this->assertSame(FirstRunSetup::DONE, FirstRunSetup::state());
     }
 
-    public function test_the_admin_pages_carry_a_notice_while_setup_is_unfinished(): void
-    {
-        $this->seed(FirstRunSeeder::class);
-
-        $this->actingAs($this->admin())
-            ->get(route('admin.dashboard'))
-            ->assertOk()
-            ->assertSee('Finish setting up your station');
-    }
-
     public function test_the_notice_is_gone_once_setup_is_finished(): void
     {
         $this->seed(FirstRunSeeder::class);
@@ -120,7 +110,11 @@ class FirstRunSetupTest extends TestCase
             ->assertDontSee('Finish setting up your station');
     }
 
-    /** Doing it later stops the nagging redirect but not the notice. */
+    /**
+     * Doing it later stops the redirect but not the notice, which is the only
+     * state the notice is seen in: while setup is owed, the admin area takes
+     * you to the step rather than mentioning it.
+     */
     public function test_skipping_leaves_the_notice_in_place(): void
     {
         $this->seed(FirstRunSeeder::class);

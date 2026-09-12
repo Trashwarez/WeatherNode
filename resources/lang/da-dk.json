@@ -64,6 +64,8 @@
     "Setup progress": "Setup progress",
     "Shown in the header, the page titles and the footer.": "Shown in the header, the page titles and the footer.",
     "Station name": "Station name",
+    "The station needs a latitude. Blank is not the same as unknown: it would be read as zero, which is a place in the Gulf of Guinea.": "The station needs a latitude. Blank is not the same as unknown: it would be read as zero, which is a place in the Gulf of Guinea.",
+    "The station needs a longitude.": "The station needs a longitude.",
     "The town or area, written the way you would say it.": "The town or area, written the way you would say it.",
     "This install does not know where it is yet, so forecasts, sunrise times and warnings have nothing to go on. It takes a minute.": "This install does not know where it is yet, so forecasts, sunrise times and warnings have nothing to go on. It takes a minute.",
     "Use my location": "Use my location",

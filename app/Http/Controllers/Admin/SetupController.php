@@ -121,29 +121,32 @@ class SetupController extends Controller
 
     /**
      * Shared with the ordinary station settings page, so a coordinate that the
-     * wizard refuses cannot be typed in later through the back door.
+     * wizard refuses cannot be typed in later through the back door. That page
+     * names its fields station_latitude and so on, hence the prefix.
      *
      * @return array<string, array<int, mixed>>
      */
-    public static function stationRules(): array
+    public static function stationRules(string $prefix = ''): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'latitude' => ['required', 'numeric', 'between:-90,90'],
-            'longitude' => ['required', 'numeric', 'between:-180,180'],
-            'elevation' => ['nullable', 'numeric', 'between:-500,9000'],
-            'timezone' => ['required', 'string', Rule::in(\DateTimeZone::listIdentifiers())],
+            $prefix . 'name' => ['required', 'string', 'max:255'],
+            $prefix . 'location' => ['nullable', 'string', 'max:255'],
+            $prefix . 'latitude' => ['required', 'numeric', 'between:-90,90'],
+            $prefix . 'longitude' => ['required', 'numeric', 'between:-180,180'],
+            $prefix . 'elevation' => ['nullable', 'numeric', 'between:-500,9000'],
+            $prefix . 'timezone' => ['required', 'string', Rule::in(\DateTimeZone::listIdentifiers())],
         ];
     }
 
     /** @return array<string, string> */
-    public static function stationMessages(): array
+    public static function stationMessages(string $prefix = ''): array
     {
         return [
-            'latitude.between' => __('Latitude runs from -90 at the south pole to 90 at the north pole.'),
-            'longitude.between' => __('Longitude runs from -180 to 180.'),
-            'timezone.in' => __('Pick a timezone from the list.'),
+            $prefix . 'latitude.required' => __('The station needs a latitude. Blank is not the same as unknown: it would be read as zero, which is a place in the Gulf of Guinea.'),
+            $prefix . 'latitude.between' => __('Latitude runs from -90 at the south pole to 90 at the north pole.'),
+            $prefix . 'longitude.required' => __('The station needs a longitude.'),
+            $prefix . 'longitude.between' => __('Longitude runs from -180 to 180.'),
+            $prefix . 'timezone.in' => __('Pick a timezone from the list.'),
         ];
     }
 }
