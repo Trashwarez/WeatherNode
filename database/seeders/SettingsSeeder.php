@@ -25,7 +25,6 @@ class SettingsSeeder extends Seeder
             ['key' => 'station.hardware', 'value' => 'WH4000SE', 'type' => 'string', 'group' => 'station', 'description' => 'Weather station hardware model'],
             ['key' => 'station.manufacturer', 'value' => 'fineoffset', 'type' => 'select', 'group' => 'station', 'description' => 'Weather station manufacturer', 'options' => 'fineoffset:Fine Offset/Ecowitt,davis:Davis Instruments,netatmo:Netatmo,ambient:Ambient Weather,weatherflow:WeatherFlow,other:Other'],
             ['key' => 'station.start_date', 'value' => '2020-12-06', 'type' => 'date', 'group' => 'station', 'description' => 'Date station started recording'],
-            ['key' => 'station.wu_id', 'value' => 'IUITGE8', 'type' => 'string', 'group' => 'station', 'description' => 'Weather Underground Station ID'],
             ['key' => 'station.server_url', 'value' => '', 'type' => 'string', 'group' => 'station', 'description' => 'Public URL of this weather site (leave empty to use APP_URL)'],
 
             // ===== Live Data Source =====
@@ -98,9 +97,9 @@ class SettingsSeeder extends Seeder
 
             // ===== Weather Underground =====
             ['key' => 'wunderground.enabled', 'value' => '1', 'type' => 'boolean', 'group' => 'wunderground', 'description' => 'Enable Weather Underground integration'],
-            ['key' => 'wunderground.station_id', 'value' => 'IUITGE8', 'type' => 'string', 'group' => 'wunderground', 'description' => 'Weather Underground Station ID'],
+            ['key' => 'wunderground.station_id', 'value' => '', 'type' => 'string', 'group' => 'wunderground', 'description' => 'Weather Underground Station ID'],
             ['key' => 'wunderground.api_key', 'value' => '', 'type' => 'encrypted', 'group' => 'wunderground', 'description' => 'Weather Underground API Key'],
-            ['key' => 'wunderground.start_date', 'value' => '2020-12-06', 'type' => 'date', 'group' => 'wunderground', 'description' => 'Start date for historical data'],
+            ['key' => 'wunderground.start_date', 'value' => '', 'type' => 'date', 'group' => 'wunderground', 'description' => 'Start date for historical data'],
             ['key' => 'wunderground.upload_enabled', 'value' => '0', 'type' => 'boolean', 'group' => 'wunderground', 'description' => 'Upload live data to Weather Underground'],
             ['key' => 'wunderground.upload_password', 'value' => '', 'type' => 'encrypted', 'group' => 'wunderground', 'description' => 'WU Upload password/key'],
 
@@ -112,7 +111,6 @@ class SettingsSeeder extends Seeder
 
             // ===== Yr.no =====
             ['key' => 'yrno.enabled', 'value' => '1', 'type' => 'boolean', 'group' => 'yrno', 'description' => 'Enable Yr.no forecasts'],
-            ['key' => 'yrno.location', 'value' => 'Nederland/Nord-Holland/Uitgeest/', 'type' => 'string', 'group' => 'yrno', 'description' => 'Yr.no location path'],
 
             // ===== Aeris Weather =====
             ['key' => 'aeris.enabled', 'value' => '0', 'type' => 'boolean', 'group' => 'aeris', 'description' => 'Enable Aeris Weather API'],
