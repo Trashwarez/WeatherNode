@@ -285,7 +285,7 @@
                 'id' => 'metar',
                 'title' => __('METAR'),
                 'lines' => [
-                    __('Station') . ': ' . ((string) ($metarFirst['icao'] ?? \App\Models\Setting::getValue('metar.primary_icao', 'EHAM'))),
+                    __('Station') . ': ' . ((string) ($metarFirst['icao'] ?? \App\Models\Setting::getValue('metar.primary_icao', ''))),
                     __('Flight category') . ': ' . ((string) ($metarFirst['flight_category'] ?? '--')),
                 ],
             ];
@@ -978,7 +978,7 @@
             'stationLocation' => \App\Models\Setting::stationLocation(),
             'tempChartShowNowLine' => (bool) \App\Models\Setting::getValue('widgets.temp_chart_now_line', true),
             'tempChartShowObserved' => (bool) \App\Models\Setting::getValue('widgets.temp_chart_observed', false),
-            'defaultMetarIcao' => \App\Models\Setting::getValue('metar.primary_icao', 'EHAM'),
+            'defaultMetarIcao' => \App\Models\Setting::getValue('metar.primary_icao', ''),
             'hasAdCode' => !empty($dashboardAdCode),
             'adCodeHtml' => $dashboardAdCode,
             'adCompany' => $dashboardAdCompany ? ucfirst(str_replace('_', ' ', $dashboardAdCompany)) : '',
@@ -4818,7 +4818,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-semibold">✈️ METAR</h3>
                     <div class="text-right">
-                        <span class="text-xs text-gray-400" x-text="metar?.[0]?.icao || defaultMetarIcao">{{ \App\Models\Setting::getValue('metar.primary_icao', 'EHAM') }}</span>
+                        <span class="text-xs text-gray-400" x-text="metar?.[0]?.icao || defaultMetarIcao">{{ \App\Models\Setting::getValue('metar.primary_icao', '') }}</span>
                         @unless($skyWaterFeatureEnabled)
                             <span class="block text-[10px] text-amber-400">{{ __('Page disabled') }}</span>
                         @endunless

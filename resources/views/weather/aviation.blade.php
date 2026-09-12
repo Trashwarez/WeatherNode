@@ -3,7 +3,9 @@
 @section('title', __('Aviation Weather') . ' ' . ($activeIcao ?? '') . ' - ' . \App\Models\Setting::stationName())
 
 @section('meta_description', __('Live METAR aviation weather for :icao with atmospheric profile, cloud layers, visibility, wind, and flight category.', ['icao' => $activeIcao ?? '']))
-@section('og_image', route('og.aviation', ['icao' => $activeIcao ?? \App\Models\Setting::getValue('metar.primary_icao', 'EHAM')]))
+@section('og_image', ($activeIcao ?: \App\Models\Setting::getValue('metar.primary_icao', ''))
+    ? route('og.aviation', ['icao' => $activeIcao ?: \App\Models\Setting::getValue('metar.primary_icao', '')])
+    : route('og.home'))
 
 @push('head_scripts')
     @vite('resources/js/pages/aviation.js')
@@ -380,7 +382,7 @@
     '@type' => 'VideoObject',
     'name' => __('Live Atmospheric Profile') . ' ' . $activeIcao . ($ssrMetar['name'] ?? '' ? ' — ' . $ssrMetar['name'] : ''),
     'description' => __('Interactive animated atmospheric profile showing real-time cloud layers, wind patterns, precipitation, and flight category for :icao. Visualizes METAR data from ground level to 45,000 feet.', ['icao' => $activeIcao]),
-    'thumbnailUrl' => route('og.aviation', ['icao' => $activeIcao]),
+    'thumbnailUrl' => $activeIcao ? route('og.aviation', ['icao' => $activeIcao]) : route('og.home'),
     'uploadDate' => $ssrMetar['observed'] ?? now()->toIso8601String(),
     'contentUrl' => url()->current(),
     'embedUrl' => url()->current(),

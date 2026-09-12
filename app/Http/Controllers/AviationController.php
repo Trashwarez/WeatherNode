@@ -10,7 +10,7 @@ class AviationController extends Controller
 {
     public function index(MetarService $metar, ?string $icao = null)
     {
-        $primaryIcao = Setting::getValue('metar.primary_icao', 'EHAM');
+        $primaryIcao = Setting::getValue('metar.primary_icao', '');
         $metarEnabled = (bool) Setting::getValue('metar.enabled', false);
 
         // Validate and normalize ICAO from URL

@@ -565,7 +565,7 @@ class WeatherController extends Controller
         }
 
         $icao = $request->input('icao');
-        $primaryIcao = Setting::getValue('metar.primary_icao', 'EHAM');
+        $primaryIcao = Setting::getValue('metar.primary_icao', '');
 
         // If a custom ICAO is requested, validate and fetch live
         if ($icao && strtoupper($icao) !== strtoupper($primaryIcao)) {

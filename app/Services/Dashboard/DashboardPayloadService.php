@@ -491,7 +491,7 @@ class DashboardPayloadService
         // METAR data (cached by poller)
         $metarData = null;
         if (Setting::getValue('metar.enabled', false)) {
-            $primaryIcao = Setting::getValue('metar.primary_icao', 'EHAM');
+            $primaryIcao = Setting::getValue('metar.primary_icao', '');
             $metarData = Cache::get("metar_{$primaryIcao}");
         }
 
