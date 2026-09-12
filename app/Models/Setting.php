@@ -68,6 +68,15 @@ class Setting extends Model
     }
 
     /**
+     * Drop a cached value after a write that did not go through setValue(),
+     * such as a firstOrCreate.
+     */
+    public static function forgetCached(string $key): void
+    {
+        Cache::forget("setting.{$key}");
+    }
+
+    /**
      * Get all settings by group
      */
     public static function getByGroup(string $group): array

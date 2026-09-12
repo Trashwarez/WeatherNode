@@ -694,6 +694,20 @@ class SettingsController extends Controller
             }
         }
 
+        if ($group === 'station') {
+            // The same rules the first-run wizard applies. Without these the
+            // page accepted 999 as a latitude, and a cleared field was stored
+            // as a blank that reads back as 0.0: a real place in the Gulf of
+            // Guinea, where sunrise times come out plausible and wrong.
+            $request->validate(
+                array_intersect_key(
+                    SetupController::stationRules('station_'),
+                    $request->all()
+                ),
+                SetupController::stationMessages('station_')
+            );
+        }
+
         if ($group === 'radar') {
             // Checkboxes: an empty selection posts nothing at all, so this
             // cannot be folded into the generic loop, which only writes keys

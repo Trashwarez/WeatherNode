@@ -11,6 +11,7 @@ use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\OgImageController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\SetupController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UpdateController;
 use App\Http\Controllers\Admin\VisitorLogController;
@@ -498,7 +499,7 @@ Route::post('/widgets/order', [\App\Http\Controllers\Api\WeatherController::clas
 */
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['auth', 'admin'])
+    ->middleware(['auth', 'admin', 'setup.pending'])
     ->group(function () {
         // Admin Dashboard
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -546,6 +547,14 @@ Route::prefix('admin')
         Route::post('/settings/history/wu-sync', [SettingsController::class, 'syncWundergroundHistory'])->name('settings.history.wu-sync');
         Route::post('/settings/advanced/diagnostics', [SettingsController::class, 'downloadAdvancedDiagnostics'])->name('settings.advanced.diagnostics');
         
+        // First run setup. Above the /settings/{group} catch-all, which would
+        // otherwise swallow nothing here but keeps the ordering obvious.
+        Route::get('/setup/station', [SetupController::class, 'station'])->name('setup.station');
+        Route::post('/setup/station', [SetupController::class, 'storeStation'])->name('setup.station.store');
+        Route::get('/setup/source', [SetupController::class, 'source'])->name('setup.source');
+        Route::post('/setup/source', [SetupController::class, 'storeSource'])->name('setup.source.store');
+        Route::post('/setup/skip', [SetupController::class, 'skip'])->name('setup.skip');
+
         // OG cache flush (must be before catch-all /settings/{group} route)
         Route::post('/settings/og/clear-cache', [SettingsController::class, 'clearOgImageCache'])->name('settings.og.clear-cache');
 
