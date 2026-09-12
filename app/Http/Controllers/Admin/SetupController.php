@@ -150,9 +150,19 @@ class SetupController extends Controller
             ->with('success', __('Setup finished. Enter the details for your station below.'));
     }
 
-    /** "I will do this later": stops the redirect, leaves the notice. */
+    /**
+     * "I will do this later": stops the redirect, leaves the notice.
+     *
+     * Guarded like the steps themselves. Without this, posting here was the
+     * one way left to move a finished setup backwards and reopen the wizard
+     * on an install that was done with it.
+     */
     public function skip(): RedirectResponse
     {
+        if (!FirstRunSetup::unfinished()) {
+            return redirect()->route('admin.dashboard');
+        }
+
         FirstRunSetup::moveTo(FirstRunSetup::SKIPPED);
 
         return redirect()->route('admin.dashboard');
