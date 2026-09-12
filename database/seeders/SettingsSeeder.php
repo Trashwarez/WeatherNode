@@ -17,14 +17,14 @@ class SettingsSeeder extends Seeder
         $settings = [
             // ===== Station Configuration =====
             ['key' => 'station.name', 'value' => 'WeatherNode', 'type' => 'string', 'group' => 'station', 'description' => 'Weather station display name'],
-            ['key' => 'station.location', 'value' => 'Waldijk - Uitgeest - Noord-Holland - Nederland', 'type' => 'string', 'group' => 'station', 'description' => 'Station location description'],
-            ['key' => 'station.latitude', 'value' => '52.5163996', 'type' => 'float', 'group' => 'station', 'description' => 'Station latitude (decimal degrees)'],
-            ['key' => 'station.longitude', 'value' => '4.7078991', 'type' => 'float', 'group' => 'station', 'description' => 'Station longitude (decimal degrees)'],
-            ['key' => 'station.elevation', 'value' => '-1', 'type' => 'float', 'group' => 'station', 'description' => 'Station elevation in meters above sea level'],
-            ['key' => 'station.timezone', 'value' => 'Europe/Amsterdam', 'type' => 'string', 'group' => 'station', 'description' => 'Station timezone'],
-            ['key' => 'station.hardware', 'value' => 'WH4000SE', 'type' => 'string', 'group' => 'station', 'description' => 'Weather station hardware model'],
+            ['key' => 'station.location', 'value' => '', 'type' => 'string', 'group' => 'station', 'description' => 'Station location description'],
+            ['key' => 'station.latitude', 'value' => '51.4779', 'type' => 'float', 'group' => 'station', 'description' => 'Station latitude (decimal degrees)'],
+            ['key' => 'station.longitude', 'value' => '-0.0015', 'type' => 'float', 'group' => 'station', 'description' => 'Station longitude (decimal degrees)'],
+            ['key' => 'station.elevation', 'value' => '0', 'type' => 'float', 'group' => 'station', 'description' => 'Station elevation in meters above sea level'],
+            ['key' => 'station.timezone', 'value' => 'UTC', 'type' => 'string', 'group' => 'station', 'description' => 'Station timezone'],
+            ['key' => 'station.hardware', 'value' => '', 'type' => 'string', 'group' => 'station', 'description' => 'Weather station hardware model'],
             ['key' => 'station.manufacturer', 'value' => 'fineoffset', 'type' => 'select', 'group' => 'station', 'description' => 'Weather station manufacturer', 'options' => 'fineoffset:Fine Offset/Ecowitt,davis:Davis Instruments,netatmo:Netatmo,ambient:Ambient Weather,weatherflow:WeatherFlow,other:Other'],
-            ['key' => 'station.start_date', 'value' => '2020-12-06', 'type' => 'date', 'group' => 'station', 'description' => 'Date station started recording'],
+            ['key' => 'station.start_date', 'value' => '', 'type' => 'date', 'group' => 'station', 'description' => 'Date station started recording'],
             ['key' => 'station.server_url', 'value' => '', 'type' => 'string', 'group' => 'station', 'description' => 'Public URL of this weather site (leave empty to use APP_URL)'],
 
             // ===== Live Data Source =====
@@ -44,7 +44,7 @@ class SettingsSeeder extends Seeder
             ['key' => 'history.wu_sync_skip_existing', 'value' => '1', 'type' => 'boolean', 'group' => 'history', 'description' => 'Skip days that already have summaries when syncing WU'],
 
             // ===== Display Settings =====
-            ['key' => 'display.language', 'value' => 'nl-nl', 'type' => 'select', 'group' => 'display', 'description' => 'Default interface language', 'options' => 'auto:Auto (browser),nl-nl:Nederlands,en-us:English (US),en-gb:English (UK),de-de:Deutsch,fr-fr:Français,es-es:Español,it-it:Italiano,pt-pt:Português (PT),pt-br:Português (BR),pl-pl:Polski,da-dk:Dansk,nn-no:Norsk,sv-se:Svenska,fi-fi:Suomi,el-gr:Ελληνικά,hr-hr:Hrvatski,sr-rs:Srpski,ca-es:Català'],
+            ['key' => 'display.language', 'value' => 'auto', 'type' => 'select', 'group' => 'display', 'description' => 'Default interface language', 'options' => 'auto:Auto (browser),nl-nl:Nederlands,en-us:English (US),en-gb:English (UK),de-de:Deutsch,fr-fr:Français,es-es:Español,it-it:Italiano,pt-pt:Português (PT),pt-br:Português (BR),pl-pl:Polski,da-dk:Dansk,nn-no:Norsk,sv-se:Svenska,fi-fi:Suomi,el-gr:Ελληνικά,hr-hr:Hrvatski,sr-rs:Srpski,ca-es:Català'],
             ['key' => 'display.unit_system', 'value' => 'metric', 'type' => 'select', 'group' => 'display', 'description' => 'Default unit system', 'options' => 'auto:Auto (browser locale),metric:Metric (°C km/h mm hPa),imperial:Imperial (°F mph in inHg),uk:UK (°C mph mm hPa),scandinavia:Scandinavia (°C m/s mm hPa)'],
             ['key' => 'display.theme', 'value' => 'dark', 'type' => 'select', 'group' => 'display', 'description' => 'Default admin interface theme', 'options' => 'dark:Dark,light:Light,user:User preference'],
             ['key' => 'display.temperature_decimals', 'value' => '1', 'type' => 'select', 'group' => 'display', 'description' => 'Temperature decimal places', 'options' => '0:0,1:1,2:2'],
@@ -106,7 +106,7 @@ class SettingsSeeder extends Seeder
             // ===== OpenWeatherMap =====
             ['key' => 'openweathermap.enabled', 'value' => '1', 'type' => 'boolean', 'group' => 'openweathermap', 'description' => 'Enable OpenWeatherMap for forecasts'],
             ['key' => 'openweathermap.api_key', 'value' => '', 'type' => 'encrypted', 'group' => 'openweathermap', 'description' => 'OpenWeatherMap API Key'],
-            ['key' => 'openweathermap.language', 'value' => 'nl', 'type' => 'string', 'group' => 'openweathermap', 'description' => 'Forecast language code'],
+            ['key' => 'openweathermap.language', 'value' => 'en', 'type' => 'string', 'group' => 'openweathermap', 'description' => 'Forecast language code'],
             ['key' => 'openweathermap.units', 'value' => 'si', 'type' => 'select', 'group' => 'openweathermap', 'description' => 'Unit system', 'options' => 'si:Metric,imperial:Imperial'],
 
             // ===== Yr.no =====
