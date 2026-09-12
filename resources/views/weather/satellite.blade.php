@@ -15,6 +15,11 @@
     // Check if station is in Netherlands
     $isInNetherlands = ($stationLat >= 50.75 && $stationLat <= 53.7) && 
                        ($stationLon >= 3.2 && $stationLon <= 7.2);
+
+    // The warning below is about the KNMI layer alone, so it only makes sense
+    // when that layer is switched on. It used to greet every station outside
+    // the Netherlands, including fresh installs with no satellite data at all.
+    $knmiLayerEnabled = (bool) \App\Models\Setting::getValue('satellite.wms_enabled', false);
 @endphp
 <div class="space-y-6">
     <!-- Header -->
@@ -25,7 +30,7 @@
         </div>
     </div>
 
-    @if(!$isInNetherlands)
+    @if($knmiLayerEnabled && !$isInNetherlands)
         <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
             <div class="flex items-start gap-3">
                 <span class="text-xl flex-shrink-0">⚠️</span>

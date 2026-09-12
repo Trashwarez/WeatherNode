@@ -1535,7 +1535,9 @@ class SettingsController extends Controller
     public function telemetry()
     {
         $telemetryService = app(\App\Services\Telemetry\TelemetryService::class);
-        $stationData = $telemetryService->collectStationData();
+        // Preview, not collect: the page has to show what sharing would mean
+        // while it is still switched off, which is when somebody is deciding.
+        $stationData = $telemetryService->previewStationData();
         
         $settings = [
             'enabled' => Setting::getValue('telemetry.enabled', false),
