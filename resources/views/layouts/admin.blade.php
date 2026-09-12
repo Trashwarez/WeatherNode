@@ -691,8 +691,11 @@
                             <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee" class="h-7">
                         </a>
                         <!-- Buy Me a Coffee - Desktop (full button) -->
+                        {{-- The image is drawn on their side and served with a one year
+                             cache header, so a browser keeps showing whatever it drew the
+                             first time. The date gives it a new address each day. --}}
                         <a href="https://www.buymeacoffee.com/centauriprime" target="_blank" rel="noopener noreferrer" class="bmc-link bmc-desktop">
-                            <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=centauriprime&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" class="h-8">
+                            <img src="https://img.buymeacoffee.com/button-api/?text=Buy+me+a+coffee&emoji=&slug=centauriprime&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff&v={{ now()->format('Y-m-d') }}" alt="Buy me a coffee" class="h-8">
                         </a>
                         
                         <!-- Theme Toggle -->
