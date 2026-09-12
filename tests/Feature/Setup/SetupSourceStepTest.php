@@ -83,6 +83,74 @@ class SetupSourceStepTest extends TestCase
             ->assertRedirect(route('admin.settings.group', 'livedata'));
     }
 
+    /**
+     * Found by walking the wizard over HTTP rather than in tests. Step two was
+     * reachable and completable whatever step was owed, so posting to it with
+     * step one unfinished left the install marked done with no location: the
+     * exact state this feature exists to prevent.
+     */
+    public function test_step_two_sends_you_back_while_step_one_is_owed(): void
+    {
+        $this->seed(SettingsSeeder::class);
+        FirstRunSetup::moveTo(FirstRunSetup::STATION);
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.setup.source'))
+            ->assertRedirect(route('admin.setup.station'));
+    }
+
+    public function test_step_two_cannot_be_saved_while_step_one_is_owed(): void
+    {
+        $this->seed(SettingsSeeder::class);
+        FirstRunSetup::moveTo(FirstRunSetup::STATION);
+
+        $this->actingAs($this->admin())
+            ->post(route('admin.setup.source.store'), ['format' => 'wu'])
+            ->assertRedirect(route('admin.setup.station'));
+
+        $this->assertSame(FirstRunSetup::STATION, FirstRunSetup::state());
+    }
+
+    /** A finished install has settings pages; it does not need the wizard. */
+    public function test_a_finished_install_is_sent_away_from_the_wizard(): void
+    {
+        $this->seed(SettingsSeeder::class);
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.setup.source'))
+            ->assertRedirect(route('admin.dashboard'));
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.setup.station'))
+            ->assertRedirect(route('admin.dashboard'));
+    }
+
+    /** Saving it again must not reopen a setup that is over. */
+    public function test_a_finished_install_cannot_be_pushed_back_into_setup(): void
+    {
+        $this->seed(SettingsSeeder::class);
+
+        $this->actingAs($this->admin())->post(route('admin.setup.station.store'), [
+            'name' => 'Testfield Weather',
+            'latitude' => '52.1',
+            'longitude' => '4.5',
+            'timezone' => 'Europe/Madrid',
+        ]);
+
+        $this->assertSame(FirstRunSetup::DONE, FirstRunSetup::state());
+    }
+
+    /** Putting it off and coming back has to work, or the notice lies. */
+    public function test_the_wizard_can_be_resumed_after_being_put_off(): void
+    {
+        $this->seed(SettingsSeeder::class);
+        FirstRunSetup::moveTo(FirstRunSetup::SKIPPED);
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.setup.station'))
+            ->assertOk();
+    }
+
     public function test_it_rejects_a_format_the_app_does_not_know(): void
     {
         $this->atSourceStep();

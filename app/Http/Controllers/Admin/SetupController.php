@@ -38,8 +38,36 @@ class SetupController extends Controller
         'wf' => 'weatherflow',
     ];
 
-    public function station(): View
+    /**
+     * The steps are in an order, and the flag says which one is owed.
+     *
+     * Without this, step two was reachable and completable whatever step was
+     * owed, so posting to it with step one unfinished left an install marked
+     * done with no location. A finished install is sent to its settings pages
+     * instead, and saving a step again cannot reopen a setup that is over.
+     *
+     * Skipped counts as unfinished on purpose: the notice links back here, and
+     * it would be lying if this bounced them away.
+     */
+    private function guard(string $step): ?RedirectResponse
     {
+        if (!FirstRunSetup::unfinished()) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($step === FirstRunSetup::SOURCE && FirstRunSetup::state() === FirstRunSetup::STATION) {
+            return redirect()->route('admin.setup.station');
+        }
+
+        return null;
+    }
+
+    public function station(): View|RedirectResponse
+    {
+        if ($redirect = $this->guard(FirstRunSetup::STATION)) {
+            return $redirect;
+        }
+
         $timezones = \DateTimeZone::listIdentifiers();
         sort($timezones);
 
@@ -62,6 +90,10 @@ class SetupController extends Controller
 
     public function storeStation(Request $request): RedirectResponse
     {
+        if ($redirect = $this->guard(FirstRunSetup::STATION)) {
+            return $redirect;
+        }
+
         $validated = $request->validate(self::stationRules(), self::stationMessages());
 
         Setting::setValue('station.name', trim($validated['name']), 'string', 'station');
@@ -76,8 +108,12 @@ class SetupController extends Controller
         return redirect()->route('admin.setup.source');
     }
 
-    public function source(): View
+    public function source(): View|RedirectResponse
     {
+        if ($redirect = $this->guard(FirstRunSetup::SOURCE)) {
+            return $redirect;
+        }
+
         return view('admin.setup.source', [
             'formats' => self::formatOptions(),
             'current' => (string) Setting::getValue('livedata.format', ''),
@@ -87,6 +123,10 @@ class SetupController extends Controller
 
     public function storeSource(Request $request): RedirectResponse
     {
+        if ($redirect = $this->guard(FirstRunSetup::SOURCE)) {
+            return $redirect;
+        }
+
         $validated = $request->validate([
             'format' => ['required', 'string', Rule::in(array_keys(self::formatOptions()))],
         ]);
