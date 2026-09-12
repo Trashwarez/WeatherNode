@@ -15,6 +15,7 @@ use App\Services\Mail\MailConfigService;
 use App\Services\Nlg\NlgProviderModelDiscovery;
 use App\Services\OpenData\OpenDataProviderRegistry;
 use App\Services\Radar\RadarFutureFramesService;
+use App\Services\Tide\TideServiceFactory;
 use App\Support\MenuFeatureMap;
 use App\Support\StatTileRegistry;
 use Illuminate\Http\Request;
@@ -2806,14 +2807,14 @@ class SettingsController extends Controller
     private function updateTideSettings(Request $request): void
     {
         Setting::setValue('tide.enabled', $request->input('tide_enabled') === '1', 'boolean', 'tide');
-        Setting::setValue('tide.source',  trim($request->input('tide_source', 'rws')),           'string',  'tide');
+        Setting::setValue('tide.source',  trim($request->input('tide_source', TideServiceFactory::DEFAULT_SOURCE)), 'string', 'tide');
 
         // Only update station fields when the station section was actually rendered in the form
         // (i.e. the source is station-based). Skipping this prevents non-station sources like
         // Marea or Open-Meteo from overwriting the saved NOAA / RWS station code with the default.
         if ($request->has('tide_station_code')) {
             $newCode   = trim($request->input('tide_station_code'));
-            $newSource = trim($request->input('tide_source', 'rws'));
+            $newSource = trim($request->input('tide_source', TideServiceFactory::DEFAULT_SOURCE));
 
             // Save both the generic key (used by TideController) and a per-source key so that
             // switching away and back to a station-based source retains the correct station.
@@ -2821,7 +2822,7 @@ class SettingsController extends Controller
             Setting::setValue("tide.{$newSource}_station_code", $newCode, 'string', 'tide');
 
             // Auto-populate station name from the driver's built-in list when available
-            $driver   = \App\Services\Tide\TideServiceFactory::make($newSource);
+            $driver   = TideServiceFactory::make($newSource);
             $stations = $driver->getStations();
             $autoName = $stations[$newCode]['name'] ?? null;
 

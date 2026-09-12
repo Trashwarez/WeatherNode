@@ -447,10 +447,10 @@ class DashboardPayloadService
         // Tide data (cached by poller) — widget summary only (no full series)
         $tideWidget = null;
         if (Setting::getValue('tide.enabled', false)) {
-            $tideSource = Setting::getValue('tide.source', 'rws');
+            $tideSource = Setting::getValue('tide.source', \App\Services\Tide\TideServiceFactory::DEFAULT_SOURCE);
             $tideStation = Setting::getValue(
                 "tide.{$tideSource}_station_code",
-                Setting::getValue('tide.station_code', \App\Services\TideService::DEFAULT_STATION)
+                Setting::getValue('tide.station_code', '')
             );
             $tideRaw = Cache::get('tide_' . $tideSource . '_' . $tideStation);
             if ($tideRaw) {
