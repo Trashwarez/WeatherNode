@@ -1,7 +1,10 @@
 @extends('weather.layout')
 
 @section('title', __('Water') . ' — ' . \App\Models\Setting::stationName())
-@section('meta_description', __('tide_page_meta', ['station' => $stationName ?? 'IJmuiden']))
+@section('meta_description', __('tide_page_meta', [
+    'station' => $stationName ?: \App\Models\Setting::stationName(),
+    'source'  => $sourceLabel ?: \App\Services\Tide\TideServiceFactory::make()->getName(),
+]))
 
 @push('head_scripts')
     @if($activeTab === 'tides')
@@ -18,7 +21,7 @@
 
     // ── Unit system ───────────────────────────────────────────────────────────
     $isImperial    = ($activeUnits ?? 'metric') === 'imperial';
-    $datumLabel    = ($source ?? 'rws') === 'rws' ? 'NAP' : 'MSL';
+    $datumLabel    = ($source ?? '') === 'rws' ? 'NAP' : 'MSL';
     $unitLabel     = $isImperial ? 'ft' : 'cm';
     $levelDecimals = $isImperial ? 2 : 0;
     $toUnit        = fn(?float $cm): ?float => $cm !== null
@@ -40,7 +43,7 @@
         : null;
 
     // ── Tide section ──────────────────────────────────────────────────────────
-    $stationNameDisplay = $stationName ?? 'IJmuiden';
+    $stationNameDisplay = $stationName ?: \App\Models\Setting::stationName();
     $updatedAt          = ($tideData ?? null) ? Carbon::parse($tideData['updated_at'])->diffForHumans() : null;
     $currentLevel       = $tideData['current_level_cm'] ?? null;
     $trend              = $tideData['trend'] ?? 'steady';
