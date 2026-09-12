@@ -149,11 +149,11 @@ class SettingsSeeder extends Seeder
             ['key' => 'marine.longitude', 'value' => '', 'type' => 'string', 'group' => 'marine', 'description' => 'Longitude for marine data (leave empty to use the station location)'],
 
             // ===== Weather Alerts =====
-            ['key' => 'alerts.enabled', 'value' => '1', 'type' => 'boolean', 'group' => 'alerts', 'description' => 'Enable weather alerts/warnings'],
+            ['key' => 'alerts.enabled', 'value' => '0', 'type' => 'boolean', 'group' => 'alerts', 'description' => 'Enable weather alerts/warnings'],
             ['key' => 'alerts.source', 'value' => 'europe', 'type' => 'select', 'group' => 'alerts', 'description' => 'Alert data source', 'options' => 'europe:Meteoalarm (Europe),usa:NWS (USA),canada:Environment Canada,uk:Met Office (UK),australia:BOM (Australia)'],
             
             // Europe (Meteoalarm) settings
-            ['key' => 'alerts.region_code', 'value' => 'NL011', 'type' => 'string', 'group' => 'alerts', 'description' => 'Meteoalarm region code (e.g., NL011 for Noord-Holland)'],
+            ['key' => 'alerts.region_code', 'value' => '', 'type' => 'string', 'group' => 'alerts', 'description' => 'Meteoalarm region code (e.g., NL011 for Noord-Holland)'],
             ['key' => 'alerts.region_name', 'value' => '', 'type' => 'string', 'group' => 'alerts', 'description' => 'Friendly region name for alerts display (optional)'],
             
             // USA (NWS) settings  

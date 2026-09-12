@@ -5016,7 +5016,7 @@
                         <div class="text-sm text-gray-400 text-center py-2">
                             <p>✓ {{ __('No active alerts') }}</p>
                             @php
-                                $alertsRegionCode = \App\Models\Setting::getValue('alerts.region_code', 'NL011');
+                                $alertsRegionCode = \App\Models\Setting::getValue('alerts.region_code', '');
                                 $alertsRegionName = \App\Models\Setting::getValue('alerts.region_name', '');
                                 $alertsRegionLabel = $alertsRegionName !== '' ? $alertsRegionName : (config('meteoalarm_regions.regions')[$alertsRegionCode] ?? $alertsRegionCode);
                             @endphp
@@ -5080,7 +5080,7 @@
                     <div class="text-sm text-gray-400 text-center py-2">
                         <p>✓ {{ __('No active alerts') }}</p>
                         @php
-                            $alertsRegionCode = \App\Models\Setting::getValue('alerts.region_code', 'NL011');
+                            $alertsRegionCode = \App\Models\Setting::getValue('alerts.region_code', '');
                             $alertsRegionName = \App\Models\Setting::getValue('alerts.region_name', '');
                             $alertsRegionLabel = $alertsRegionName !== '' ? $alertsRegionName : (config('meteoalarm_regions.regions')[$alertsRegionCode] ?? $alertsRegionCode);
                         @endphp

@@ -44,7 +44,7 @@ class DataController extends Controller
             ] : null,
             'alerts' => $alerts,
             'source' => $source,
-            'region' => Setting::getValue('alerts.region_code', 'NL011'),
+            'region' => Setting::getValue('alerts.region_code', ''),
         ]);
     }
 

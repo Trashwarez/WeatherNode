@@ -1349,7 +1349,7 @@ class SettingsController extends Controller
             'source' => $currentSource,
             
             // Europe (Meteoalarm)
-            'region_code' => Setting::getValue('alerts.region_code', 'NL011'),
+            'region_code' => Setting::getValue('alerts.region_code', ''),
             'region_name' => Setting::getValue('alerts.region_name', ''),
             
             // USA (NWS)
@@ -1413,7 +1413,7 @@ class SettingsController extends Controller
         Setting::setValue('alerts.source', $request->input('source', 'europe'), 'select', 'alerts');
         
         // Europe (Meteoalarm)
-        Setting::setValue('alerts.region_code', $request->input('region_code', 'NL011'), 'string', 'alerts');
+        Setting::setValue('alerts.region_code', $request->input('region_code', ''), 'string', 'alerts');
         Setting::setValue('alerts.region_name', $request->input('region_name', ''), 'string', 'alerts');
         
         // USA (NWS)
