@@ -184,7 +184,11 @@ jobs:
   build-docker:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # Two architectures, and arm64 is emulated, so this is slow by nature. 45
+    # was set from the wall-clock of past runs and promptly killed a healthy
+    # build at 46 minutes. The point of the limit is to catch a hang, not to
+    # race a normal build, so it sits well clear of one.
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
