@@ -1252,7 +1252,7 @@ class WeatherController extends Controller
                 'waqi_enabled' => Setting::getValue('waqi.enabled', true),
                 'waqi_station_mode' => Setting::getValue('waqi.station_mode', 'auto'),
                 'waqi_station_id' => Setting::getValue('waqi.station_id', ''),
-                'luftdaten_enabled' => Setting::getValue('luftdaten.enabled', true),
+                'luftdaten_enabled' => Setting::getValue('luftdaten.enabled', false),
                 'luftdaten_sensor_id' => Setting::getValue('luftdaten.sensor_id', ''),
                 'luftdaten_noise_enabled' => Setting::getValue('luftdaten_noise.enabled', false),
                 'luftdaten_noise_sensor_id' => Setting::getValue('luftdaten_noise.sensor_id', ''),
