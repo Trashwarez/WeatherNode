@@ -19,6 +19,11 @@ concurrency:
   cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
 
 jobs:
+  # Note for anyone tempted to mark the VERSION bump [skip ci]: don't. The tag
+  # points at that very commit, so skipping it skips the tag build too, which
+  # is the build that produces the release. One redundant edge build per
+  # release is the cheaper problem, and the concurrency group above cancels it
+  # if another push follows.
   create-tag:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
@@ -48,7 +53,7 @@ jobs:
           echo "${TAG}" > VERSION
           git add VERSION
           if ! git diff --staged --quiet; then
-            git commit -m "Release ${TAG} [skip ci]"
+            git commit -m "Release ${TAG}"
             git push origin HEAD
           fi
 
