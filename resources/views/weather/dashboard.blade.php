@@ -358,6 +358,12 @@
                 }
                 $lines[] = (string) $key . ': ' . $value . ' µg/m³';
             }
+            // The station's own PM10, which is a different thing from the PM10
+            // on the air quality card: that one comes from the outside sources.
+            $ssrPm10 = $ssrExtraSensors['pm10']['value'] ?? null;
+            if ($ssrPm10 !== null) {
+                $lines[] = 'PM10: ' . $ssrPm10 . ' µg/m³';
+            }
             $ssrHybridCards[] = ['id' => 'pm25', 'title' => __('PM2.5 Air Quality'), 'lines' => $lines ?: [__('No PM2.5 data')]];
         }
         if ($ssrWidgetFlags['co2']) {
@@ -4018,7 +4024,7 @@
 	                </template>
 
 	                <!-- PM2.5 Widget -->
-	                <template x-if="isWidgetEnabled('pm25') && Object.keys(pm25Channels()).length > 0">
+	                <template x-if="isWidgetEnabled('pm25') && (Object.keys(pm25Channels()).length > 0 || extraSensors?.pm10?.value != null)">
 		                <div class="sortable-widget bg-weather-card card-3d rounded-2xl p-5 border border-white/10"
 		                     data-widget="pm25"
 		                     @mouseenter="!editMode && tiltCard($event)" @mouseleave="!editMode && resetCard($event)" @mousemove="!editMode && tiltCard($event)">
@@ -4036,6 +4042,12 @@
                             <div class="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
                                 <span class="text-gray-400" x-text="getPm25Label(key)"></span>
                                 <span class="font-bold" x-text="value + ' µg/m³'"></span>
+                            </div>
+                        </template>
+                        <template x-if="extraSensors?.pm10?.value !== undefined && extraSensors?.pm10?.value !== null">
+                            <div class="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
+                                <span class="text-gray-400">PM10</span>
+                                <span class="font-bold" x-text="extraSensors.pm10.value + ' µg/m³'"></span>
                             </div>
                         </template>
                     </div>
