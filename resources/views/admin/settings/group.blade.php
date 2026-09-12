@@ -351,7 +351,7 @@
                         }
                     }
                     if ($group === 'satellite' && $shouldHide) {
-                        $currentProvider = \App\Models\Setting::getValue('satellite.provider', 'knmi');
+                        $currentProvider = \App\Models\Setting::getValue('satellite.provider', 'nasa');
                         if ($isSatelliteKnmiUrl && $currentProvider === 'knmi') $shouldShowByDefault = true;
                         if ($isSatelliteNasaUrl && $currentProvider === 'nasa') $shouldShowByDefault = true;
                         if ($isSatelliteCustomUrl && $currentProvider === 'custom') $shouldShowByDefault = true;
