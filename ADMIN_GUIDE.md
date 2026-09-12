@@ -7,6 +7,31 @@ This guide is for **admins** managing a WeatherNode dashboard.
 - Admin panel: `/admin`
 - After login you can access all settings under `/admin/settings/*`.
 
+## First run
+
+A new install asks where it is before it will let you do anything else, because
+forecasts, sunrise times, warnings and tides all start from that. Until it is
+answered, any admin page sends you to the step still owed.
+
+**Step one, the station.** Name, place, position, height and timezone, plus the
+address the site is reached at. The position is the awkward part, so the form
+does the work: click the map or drag the marker and the numbers fill in, type
+the numbers and the marker follows. A **Use my location** button appears when
+the browser will answer, which needs a secure context, so it is hidden on a
+plain HTTP address on your own network. Typing two numbers always works, map or
+no map. The timezone list opens on whatever zone your browser is in.
+
+**Step two, the data source.** The station or software that sends the readings,
+and optionally which kit it is. Choosing a source takes you to its own settings
+page afterwards, which is where keys and addresses go.
+
+**I will do this later** stops the redirecting at once and leaves a reminder in
+the admin until you finish. Nothing here is permanent: it all lives in
+`/admin/settings/station` and `/admin/settings/livedata` afterwards.
+
+Existing installs never see any of this. The setup only opens on a database
+that has just been seeded for the first time.
+
 ## Key admin pages
 
 - **Updates** (`/admin/settings/updates`)
@@ -36,7 +61,8 @@ This guide is for **admins** managing a WeatherNode dashboard.
   - When enabled, all public pages serve a dynamic `og:image` meta tag (1200×630 PNG) so that sharing any page on WhatsApp, X/Twitter, Facebook, etc. shows a branded weather card
 - **Tides** (`/admin/settings/tide`)
   - Enable/disable tidal data; choose station and data source
-  - Data from Rijkswaterstaat (IJmuiden default, 6 pre-configured Dutch stations)
+  - Defaults to Open-Meteo Marine, which works anywhere from your station coordinates and needs no gauge
+  - Rijkswaterstaat, NOAA and others are available too; the gauge networks ask you to pick a station
   - Polled hourly; public page at `/water`
 - **Waves & Sea Temp** (`/admin/settings/waves`)
   - Enable/disable wave and sea temperature data from Open-Meteo Marine API (free, coordinate-based)
@@ -57,7 +83,9 @@ This guide is for **admins** managing a WeatherNode dashboard.
   - Verify scheduled jobs are running
   - See which pollers run and when
 - **Station / Live Data Source**
-  - Station info (name, location, coordinates, timezone) at `/admin/settings/station`
+  - A new install asks for all of this on first login, with a map for the coordinates. See **First run** below
+  - Station info (name, place, coordinates, height, timezone, site address) at `/admin/settings/station`
+  - Coordinates are checked: latitude -90 to 90, longitude -180 to 180, and neither may be left blank
   - Configure your live station feed (local file/API or cloud)
 
 ## User Registration

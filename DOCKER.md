@@ -58,6 +58,8 @@ Run commands from the repository root (the folder containing `docker-compose.yml
 
   If no user exists yet and you did not set `ADMIN_*` env values, open `/setup/admin` once to create the first admin account.
 
+  Either way, the first login opens a short setup that asks where the station is and where its readings come from. Nothing in the image knows about any particular place, so answer that before judging what the weather pages show.
+
 3. **Optional: initial weather data**
    ```bash
    docker compose exec app php artisan weather:fetch --save

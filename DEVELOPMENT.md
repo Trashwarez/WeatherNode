@@ -43,6 +43,8 @@ npm run build && php artisan serve
 
 Open your site and sign in at `/admin` using the admin account you created with `php artisan admin:create`.
 
+The first login opens a two step setup asking where the station is and where its readings come from. A seeded database knows about no particular place, so nothing on the weather pages means much until that is answered. It can be put off with **I will do this later**, which is what you want when you are only running the test suite.
+
 For automation only, you can set `ADMIN_EMAIL` and `ADMIN_PASSWORD` before `php artisan db:seed`.
 
 ## One command setup
