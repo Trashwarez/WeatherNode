@@ -154,7 +154,7 @@
         <div class="bg-weather-card rounded-2xl p-4 border border-white/10 md:col-span-2">
             @php
                 $yesterdayUtc = gmdate('Y-m-d', time() - 86400);
-                $satelliteProvider = \App\Models\Setting::getValue('satellite.provider', 'knmi');
+                $satelliteProvider = \App\Models\Setting::getValue('satellite.provider', 'nasa');
                 $satelliteRegion = \App\Models\Setting::getValue('satellite.display_region', 'europe');
                 $europeUrl = \App\Models\Setting::getValue("satellite.sources.{$satelliteProvider}.europe_url", '');
                 $worldUrl = \App\Models\Setting::getValue("satellite.sources.{$satelliteProvider}.world_url", '');
@@ -162,7 +162,7 @@
                 $chosenUrl = ($satelliteRegion === 'world' && is_string($worldUrl) && trim($worldUrl) !== '') ? $worldUrl : $europeUrl;
 
                 $providerLabels = [
-                    'knmi' => 'KNMI',
+                    'knmi' => __('Local'),
                     'nasa' => 'NASA',
                     'custom' => __('Custom'),
                 ];

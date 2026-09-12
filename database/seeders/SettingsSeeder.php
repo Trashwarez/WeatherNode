@@ -213,7 +213,7 @@ class SettingsSeeder extends Seeder
             ['key' => 'radar.rainviewer_zoom', 'value' => '7', 'type' => 'integer', 'group' => 'radar', 'description' => 'RainViewer map zoom level (0=world, 1-7; max 7 as of 2026)'],
             ['key' => 'radar.rainviewer_mode', 'value' => 'api', 'type' => 'select', 'group' => 'radar', 'description' => 'RainViewer display mode', 'options' => 'api:API (animated map),iframe:Iframe embed'],
             ['key' => 'radar.frame_delay', 'value' => '1000', 'type' => 'select', 'group' => 'radar', 'description' => 'Animation speed between radar frames. Slower = fewer requests, less chance of rate limiting.', 'options' => '500:Fast (500ms),800:Normal (800ms),1000:Balanced (1000ms),1500:Slow (1500ms),2000:Very slow (2000ms)'],
-            ['key' => 'radar.card_sources', 'value' => 'knmi,buienradar', 'type' => 'string', 'group' => 'radar', 'description' => 'Additional radar sources to show on the radar page, besides the main provider'],
+            ['key' => 'radar.card_sources', 'value' => '', 'type' => 'string', 'group' => 'radar', 'description' => 'Additional radar sources to show on the radar page, besides the main provider'],
             ['key' => 'radar.use_proxy', 'value' => '0', 'type' => 'boolean', 'group' => 'radar', 'description' => 'Use server-side tile caching. Prevents rate limiting and CORS issues. WARNING: May not work on shared hosting due to security restrictions (508 errors). Recommended for VPS/dedicated servers only.'],
             ['key' => 'radar.widget_provider', 'value' => '', 'type' => 'select', 'group' => 'radar', 'description' => 'Widget radar provider (leave empty to use main provider)', 'options' => ':Use main provider,knmi:KNMI,buienradar:Buienradar,rainviewer:RainViewer'],
             ['key' => 'radar.widget_rainviewer_mode', 'value' => 'api', 'type' => 'select', 'group' => 'radar', 'description' => 'Widget RainViewer display mode', 'options' => 'api:API (animated map),iframe:Iframe embed'],
@@ -221,16 +221,22 @@ class SettingsSeeder extends Seeder
 
             // ===== Satellite =====
             ['key' => 'satellite.enabled', 'value' => '1', 'type' => 'boolean', 'group' => 'satellite', 'description' => 'Enable satellite imagery display'],
-            ['key' => 'satellite.provider', 'value' => 'knmi', 'type' => 'select', 'group' => 'satellite', 'description' => 'Satellite provider', 'options' => 'knmi:KNMI (Local),nasa:NASA Worldview (Worldwide),custom:Custom URL'],
+            // NASA GIBS by default: a public tile service that covers the whole
+            // planet and centres on the station. This used to be the 'knmi' slot
+            // below, which was neither KNMI nor worldwide.
+            ['key' => 'satellite.provider', 'value' => 'nasa', 'type' => 'select', 'group' => 'satellite', 'description' => 'Satellite provider', 'options' => 'knmi:Local image (your own URL),nasa:NASA Worldview (Worldwide),custom:Custom URL'],
             ['key' => 'satellite.display_region', 'value' => 'europe', 'type' => 'select', 'group' => 'satellite', 'description' => 'Which satellite view to show on /radar', 'options' => 'europe:Local,world:Worldwide'],
             // NASA defaults (B): near-real-time + selectable daily + selectable truecolor/infrared
             ['key' => 'satellite.nasa.mode', 'value' => 'nrt', 'type' => 'select', 'group' => 'satellite', 'description' => 'NASA imagery mode', 'options' => 'nrt:Near real-time,daily:Daily mosaic'],
             ['key' => 'satellite.nasa.imagery', 'value' => 'truecolor', 'type' => 'select', 'group' => 'satellite', 'description' => 'NASA imagery type', 'options' => 'truecolor:True color,infrared:Infrared (thermal)'],
             // Defaults are tile templates (work in Leaflet). {time} will be replaced with today's YYYY-MM-DD in UTC.
             // Provider-specific storage (what the admin UI edits)
-            ['key' => 'satellite.sources.knmi.europe_url', 'value' => 'https://www.meteociel.fr/accueil/sat24ir.gif', 'type' => 'string', 'group' => 'satellite', 'description' => 'KNMI: Europe satellite image URL (IR, updates frequently)'],
-            ['key' => 'satellite.sources.knmi.world_url', 'value' => '', 'type' => 'string', 'group' => 'satellite', 'description' => 'KNMI: Worldwide tile URL template (optional)'],
-            ['key' => 'satellite.sources.knmi.zoom', 'value' => '4', 'type' => 'integer', 'group' => 'satellite', 'description' => 'KNMI: Zoom level'],
+            // Blank. This slot used to ship a hotlinked GIF from meteociel.fr,
+            // labelled KNMI, so every install pulled a French site's image every
+            // few minutes and credited it to a Dutch agency.
+            ['key' => 'satellite.sources.knmi.europe_url', 'value' => '', 'type' => 'string', 'group' => 'satellite', 'description' => 'Local: satellite image URL'],
+            ['key' => 'satellite.sources.knmi.world_url', 'value' => '', 'type' => 'string', 'group' => 'satellite', 'description' => 'Local: worldwide tile URL template (optional)'],
+            ['key' => 'satellite.sources.knmi.zoom', 'value' => '4', 'type' => 'integer', 'group' => 'satellite', 'description' => 'Local: zoom level'],
 
             // Default NASA URLs start with NRT truecolor (time includes {datetime}).
             // If a user selects daily or infrared in admin UI, the app will rewrite these values accordingly.
