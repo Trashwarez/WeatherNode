@@ -23,7 +23,7 @@ class SettingsSeeder extends Seeder
             ['key' => 'station.elevation', 'value' => '0', 'type' => 'float', 'group' => 'station', 'description' => 'Station elevation in meters above sea level'],
             ['key' => 'station.timezone', 'value' => 'UTC', 'type' => 'string', 'group' => 'station', 'description' => 'Station timezone'],
             ['key' => 'station.hardware', 'value' => '', 'type' => 'string', 'group' => 'station', 'description' => 'Weather station hardware model'],
-            ['key' => 'station.manufacturer', 'value' => 'fineoffset', 'type' => 'select', 'group' => 'station', 'description' => 'Weather station manufacturer', 'options' => 'fineoffset:Fine Offset/Ecowitt,davis:Davis Instruments,netatmo:Netatmo,ambient:Ambient Weather,weatherflow:WeatherFlow,other:Other'],
+            ['key' => 'station.manufacturer', 'value' => '', 'type' => 'select', 'group' => 'station', 'description' => 'Weather station manufacturer', 'options' => ':Not set,fineoffset:Fine Offset/Ecowitt,davis:Davis Instruments,netatmo:Netatmo,ambient:Ambient Weather,weatherflow:WeatherFlow,other:Other'],
             ['key' => 'station.start_date', 'value' => '', 'type' => 'date', 'group' => 'station', 'description' => 'Date station started recording'],
             ['key' => 'station.server_url', 'value' => '', 'type' => 'string', 'group' => 'station', 'description' => 'Public URL of this weather site (leave empty to use APP_URL)'],
 

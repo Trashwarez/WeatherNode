@@ -42,6 +42,14 @@
                        value="{{ old('location', $location) }}"
                        class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500">
             </div>
+
+            <div>
+                <label for="server_url" class="block text-sm font-medium text-gray-900 dark:text-white">{{ __('Site address') }}</label>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('Filled in from where you are reading this. Change it if the site is reached at a different address from outside.') }}</p>
+                <input type="url" name="server_url" id="server_url" maxlength="255"
+                       value="{{ old('server_url', $serverUrl) }}"
+                       class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500">
+            </div>
         </div>
 
         <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 space-y-4">

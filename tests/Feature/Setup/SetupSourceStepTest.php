@@ -151,6 +151,57 @@ class SetupSourceStepTest extends TestCase
             ->assertOk();
     }
 
+    /**
+     * The kit is part of what the community map shows, and nothing else in
+     * the app ever asks. The manufacturer used to ship as Fine Offset, which
+     * meant every install sharing itself claimed hardware it may not have.
+     */
+    public function test_it_asks_what_the_hardware_is(): void
+    {
+        $this->atSourceStep();
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.setup.source'))
+            ->assertOk()
+            ->assertSee('name="manufacturer"', false)
+            ->assertSee('name="hardware"', false);
+    }
+
+    public function test_it_saves_the_hardware(): void
+    {
+        $this->atSourceStep();
+
+        $this->actingAs($this->admin())->post(route('admin.setup.source.store'), [
+            'format' => 'ecoLcl',
+            'manufacturer' => 'davis',
+            'hardware' => 'Vantage Pro2',
+        ]);
+
+        $this->assertSame('davis', Setting::getValue('station.manufacturer'));
+        $this->assertSame('Vantage Pro2', Setting::getValue('station.hardware'));
+    }
+
+    /** Saying nothing is allowed: it is a nicety, not a requirement. */
+    public function test_the_hardware_may_be_left_blank(): void
+    {
+        $this->atSourceStep();
+
+        $this->actingAs($this->admin())
+            ->post(route('admin.setup.source.store'), ['format' => 'ecoLcl'])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame(FirstRunSetup::DONE, FirstRunSetup::state());
+    }
+
+    public function test_it_rejects_a_manufacturer_it_does_not_know(): void
+    {
+        $this->atSourceStep();
+
+        $this->actingAs($this->admin())
+            ->post(route('admin.setup.source.store'), ['format' => 'ecoLcl', 'manufacturer' => 'acme'])
+            ->assertSessionHasErrors('manufacturer');
+    }
+
     public function test_it_rejects_a_format_the_app_does_not_know(): void
     {
         $this->atSourceStep();

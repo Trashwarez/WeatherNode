@@ -89,6 +89,42 @@ class SetupStationStepTest extends TestCase
     }
 
     /**
+     * The address the community map links back to, and what this site tells
+     * other services about itself. Nobody should have to go and find it.
+     */
+    public function test_the_site_address_is_filled_in_already(): void
+    {
+        $this->seed(FirstRunSeeder::class);
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.setup.station'))
+            ->assertOk()
+            ->assertSee('name="server_url"', false)
+            ->assertSee('value="' . rtrim(config('app.url'), '/') . '"', false);
+    }
+
+    public function test_the_site_address_can_be_changed(): void
+    {
+        $this->seed(FirstRunSeeder::class);
+
+        $this->actingAs($this->admin())
+            ->post(route('admin.setup.station.store'), $this->validPayload([
+                'server_url' => 'https://weather.example.com',
+            ]));
+
+        $this->assertSame('https://weather.example.com', Setting::getValue('station.server_url'));
+    }
+
+    public function test_it_rejects_an_address_that_is_not_one(): void
+    {
+        $this->seed(FirstRunSeeder::class);
+
+        $this->actingAs($this->admin())
+            ->post(route('admin.setup.station.store'), $this->validPayload(['server_url' => 'not a url']))
+            ->assertSessionHasErrors('server_url');
+    }
+
+    /**
      * setValue rewrites the row's type as well as its value, so a wizard that
      * passes the wrong one quietly changes how that setting is read
      * everywhere. Elevation is declared a float and must stay one.

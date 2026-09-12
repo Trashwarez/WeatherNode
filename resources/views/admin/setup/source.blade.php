@@ -42,6 +42,32 @@
             </p>
         </div>
 
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 space-y-4">
+            <div>
+                <h2 class="text-sm font-medium text-gray-900 dark:text-white">{{ __('Which kit is it?') }}</h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Optional, and only shown to others if you put your station on the community map.') }}</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="manufacturer" class="block text-sm text-gray-700 dark:text-gray-200 mb-1">{{ __('Maker') }}</label>
+                    <select name="manufacturer" id="manufacturer"
+                            class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500">
+                        @foreach($manufacturers as $key => $label)
+                            <option value="{{ $key }}" {{ old('manufacturer', $manufacturer) === $key ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="hardware" class="block text-sm text-gray-700 dark:text-gray-200 mb-1">{{ __('Model') }}</label>
+                    <input type="text" name="hardware" id="hardware" maxlength="255"
+                           value="{{ old('hardware', $hardware) }}"
+                           placeholder="{{ __('for example WS2900 or Vantage Pro2') }}"
+                           class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+        </div>
+
         <div class="flex items-center justify-between gap-4 flex-wrap">
             <div class="flex items-center gap-3">
                 <a href="{{ route('admin.setup.station') }}"
@@ -62,4 +88,29 @@
 
     <form id="setup-skip" method="POST" action="{{ route('admin.setup.skip') }}" class="hidden">@csrf</form>
 </div>
+
+@push('scripts')
+<script>
+(function () {
+    // Picking a format is a decent guess at the maker, so fill it in. Only
+    // while the field is still untouched: plenty of people run one company's
+    // hardware through another's software.
+    const makerFor = @json($manufacturerForFormat);
+    const maker = document.getElementById('manufacturer');
+    if (!maker || maker.value !== '') return;
+
+    document.querySelectorAll('input[name="format"]').forEach((radio) => {
+        radio.addEventListener('change', () => {
+            if (maker.dataset.touched) return;
+            const guess = makerFor[radio.value] ?? '';
+            if ([...maker.options].some((o) => o.value === guess)) {
+                maker.value = guess;
+            }
+        });
+    });
+
+    maker.addEventListener('change', () => { maker.dataset.touched = '1'; });
+})();
+</script>
+@endpush
 @endsection

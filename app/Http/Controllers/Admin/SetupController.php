@@ -79,6 +79,7 @@ class SetupController extends Controller
             'longitude' => Setting::longitude(),
             'elevation' => (float) Setting::getValue('station.elevation', 0),
             'timezone' => trim((string) (Setting::getValue('station.timezone', '') ?? '')),
+            'serverUrl' => self::currentSiteAddress(),
             // Nothing has been chosen yet at step one: the seeded UTC and the
             // Greenwich coordinates are placeholders, not answers. The page
             // may suggest the browser's own zone and open the map at world
@@ -102,6 +103,7 @@ class SetupController extends Controller
         Setting::setValue('station.longitude', (string) $validated['longitude'], 'float', 'station');
         Setting::setValue('station.elevation', (string) ($validated['elevation'] ?? 0), 'float', 'station');
         Setting::setValue('station.timezone', $validated['timezone'], 'string', 'station');
+        Setting::setValue('station.server_url', rtrim(trim((string) ($validated['server_url'] ?? '')), '/'), 'string', 'station');
 
         FirstRunSetup::moveTo(FirstRunSetup::SOURCE);
 
@@ -117,6 +119,10 @@ class SetupController extends Controller
         return view('admin.setup.source', [
             'formats' => self::formatOptions(),
             'current' => (string) Setting::getValue('livedata.format', ''),
+            'manufacturers' => self::manufacturerOptions(),
+            'manufacturer' => (string) Setting::getValue('station.manufacturer', ''),
+            'hardware' => (string) Setting::getValue('station.hardware', ''),
+            'manufacturerForFormat' => self::MANUFACTURER_FOR_FORMAT,
             'step' => 2,
         ]);
     }
@@ -129,9 +135,13 @@ class SetupController extends Controller
 
         $validated = $request->validate([
             'format' => ['required', 'string', Rule::in(array_keys(self::formatOptions()))],
+            'manufacturer' => ['nullable', 'string', Rule::in(array_keys(self::manufacturerOptions()))],
+            'hardware' => ['nullable', 'string', 'max:255'],
         ]);
 
         Setting::setValue('livedata.format', $validated['format'], 'select', 'livedata');
+        Setting::setValue('station.manufacturer', (string) ($validated['manufacturer'] ?? ''), 'select', 'station');
+        Setting::setValue('station.hardware', trim((string) ($validated['hardware'] ?? '')), 'string', 'station');
 
         FirstRunSetup::moveTo(FirstRunSetup::DONE);
 
@@ -146,6 +156,53 @@ class SetupController extends Controller
         FirstRunSetup::moveTo(FirstRunSetup::SKIPPED);
 
         return redirect()->route('admin.dashboard');
+    }
+
+    /**
+     * Which maker each format usually implies, used only to preselect the
+     * dropdown. Anyone can change it: plenty of people run Ecowitt hardware
+     * through other software, and the other way round.
+     */
+    private const MANUFACTURER_FOR_FORMAT = [
+        'ecoLcl' => 'fineoffset',
+        'ecowittAPI' => 'fineoffset',
+        'DWL' => 'davis',
+        'DWL_v2api' => 'davis',
+        'DWL_v2api_demo' => 'davis',
+        'weatherlink' => 'davis',
+        'AWapi' => 'ambient',
+        'wf' => 'weatherflow',
+    ];
+
+    /**
+     * The address this site is reachable at, as best the app can tell.
+     *
+     * This is what the community map links back to, and nobody should have to
+     * go and look it up. A stored value wins; otherwise APP_URL, unless that
+     * is still the framework's stock localhost, in which case the host the
+     * admin is actually browsing is the better guess. Always editable.
+     */
+    public static function currentSiteAddress(): string
+    {
+        $stored = trim((string) Setting::getValue('station.server_url', ''));
+        if ($stored !== '') {
+            return $stored;
+        }
+
+        $configured = rtrim(trim((string) config('app.url', '')), '/');
+        if ($configured !== '' && $configured !== 'http://localhost') {
+            return $configured;
+        }
+
+        $fromRequest = rtrim(trim((string) request()->getSchemeAndHttpHost()), '/');
+
+        return $fromRequest !== '' ? $fromRequest : $configured;
+    }
+
+    /** @return array<string, string> */
+    public static function manufacturerOptions(): array
+    {
+        return Setting::find('station.manufacturer')?->getOptionsArray() ?? [];
     }
 
     /**
@@ -174,6 +231,7 @@ class SetupController extends Controller
             $prefix . 'latitude' => ['required', 'numeric', 'between:-90,90'],
             $prefix . 'longitude' => ['required', 'numeric', 'between:-180,180'],
             $prefix . 'elevation' => ['nullable', 'numeric', 'between:-500,9000'],
+            $prefix . 'server_url' => ['nullable', 'string', 'url', 'max:255'],
             $prefix . 'timezone' => ['required', 'string', Rule::in(\DateTimeZone::listIdentifiers())],
         ];
     }
