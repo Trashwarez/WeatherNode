@@ -12,14 +12,16 @@ class TelemetryService
     /**
      * Collect station data for telemetry
      */
-    public function collectStationData(): ?array
+    /**
+     * What would be sent, whether or not sending is switched on.
+     *
+     * The settings page shows this so an owner can see what sharing means
+     * before agreeing to it. Building it is not sending it: collectStationData
+     * below is the one the senders call, and it still refuses while the
+     * setting is off.
+     */
+    public function previewStationData(): ?array
     {
-        $enabled = Setting::getValue('telemetry.enabled', false);
-        
-        if (!$enabled) {
-            return null;
-        }
-
         try {
             $name = Setting::stationName();
             $hardware = Setting::getValue('station.hardware', '');
@@ -54,6 +56,18 @@ class TelemetryService
             ]);
             return null;
         }
+    }
+
+    /**
+     * The data to send, or null when sharing is switched off.
+     */
+    public function collectStationData(): ?array
+    {
+        if (!Setting::getValue('telemetry.enabled', false)) {
+            return null;
+        }
+
+        return $this->previewStationData();
     }
 
     /**
