@@ -3024,7 +3024,7 @@
     "Zodiacal Light (morning) hint": "Schwacher Lichtkegel entlang der Ekliptik vor Sonnenaufgang im Herbst. Dunkler Himmel nötig.",
     "Zone Code (Optional)": "Zonencode (optional)",
     "Zonnestralen": "Sonnenstrahlen",
-    "{1} Found 1 station.|[2,*] Found :count stations.": "{1} 1 Station gefunden.|[2,*] Gefunden :count Stationen.",
+    "{1} Found 1 station.|[2,*] Found :count stations.": "{1} 1 Station gefunden.|[2,*] :count Stationen gefunden.",
     "→ Cache is empty. Run:": "→ Der Cache ist leer. Ausführen:",
     "→ Check API keys are configured correctly": "→ Überprüfen Sie, ob die API-Schlüssel korrekt konfiguriert sind.",
     "→ Check if cron job is running:": "→ Überprüfen Sie, ob der Cron-Job ausgeführt wird:",
