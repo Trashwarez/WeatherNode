@@ -1908,6 +1908,14 @@ class SettingsController extends Controller
                         break;
                     }
 
+                    if ($format === 'wll_local') {
+                        $data = app(\App\Services\Weather\Sources\WeatherLinkLiveLocalAdapter::class)->fetch();
+                        $result = $data ?
+                            ['success' => true, 'message' => 'The WeatherLink Live sent data.'] :
+                            ['success' => false, 'message' => 'No data returned. Check the WeatherLink Live IP address on the WeatherLink settings page, and that it is on the same network.'];
+                        break;
+                    }
+
                     if ($format === 'DWL') {
                         $svc = app(\App\Services\Weather\Sources\WeatherLinkV1Adapter::class);
                         $data = $svc->fetch();
