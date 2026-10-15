@@ -64,8 +64,11 @@ class CheckSensorHealth extends Command
             return;
         }
 
+        // The station's own time, not when WeatherNode stored it: a cloud
+        // source keeps returning a dead station's last observation (#156).
+        // How old is too old depends on the source.
         $ageMinutes = abs(now()->diffInMinutes($latestReading->recorded_at));
-        $isStale = $ageMinutes > 5;
+        $isStale = $ageMinutes > \App\Support\LiveSource::limits()['stale'];
 
         $this->healthStatus['sensor'] = [
             'is_stale' => (bool) $isStale,

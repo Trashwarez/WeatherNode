@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\DailySummary;
 use App\Models\ClimateRecord;
 use App\Models\WeatherReading;
+use Carbon\Carbon;
 use App\Services\Notifications\NotificationDispatcher;
 use App\Services\Weather\EcowittService;
 use App\Services\Weather\LocalFiles\LocalFileSourceService;
@@ -385,15 +386,15 @@ class FetchWeatherData extends Command
         }
 
         if ($format === 'wu') {
-            return $wunderground->fetch();
+            return $this->unlessAlreadyStored($wunderground->fetch());
         }
 
         if ($format === 'wf') {
-            return $weatherFlow->fetch();
+            return $this->unlessAlreadyStored($weatherFlow->fetch());
         }
 
         if ($format === 'AWapi') {
-            return $ambient->fetch();
+            return $this->unlessAlreadyStored($ambient->fetch());
         }
 
         // Netatmo stations send about every ten minutes. The same reading
@@ -408,7 +409,7 @@ class FetchWeatherData extends Command
         }
 
         if ($format === 'DWL') {
-            return $weatherLinkV1->fetch();
+            return $this->unlessAlreadyStored($weatherLinkV1->fetch());
         }
 
         if ($format === 'DWL_v2api' || $format === 'DWL_v2api_demo') {
@@ -439,6 +440,28 @@ class FetchWeatherData extends Command
         }
 
         return $ecowitt->fetchRealTimeData();
+    }
+
+    /**
+     * A cloud source keeps returning the station's last upload until a new
+     * one arrives, often for five to ten minutes. Storing it again every
+     * minute made duplicate rows, and made a dead station look alive by
+     * stored time (#156). The same observation again is handled like a
+     * push: already stored, so only the summary is left to do.
+     */
+    private function unlessAlreadyStored(?array $data): ?array
+    {
+        if ($data === null || empty($data['recorded_at'])) {
+            return $data;
+        }
+
+        $last = WeatherReading::mostRecent();
+        $measured = Carbon::parse($data['recorded_at']);
+        if ($last !== null && $last->recorded_at->equalTo($measured)) {
+            return ['__from_db' => true, '__reading' => $last];
+        }
+
+        return $data;
     }
 
     private function saveReading(string $format, array $data, EcowittService $ecowitt, WeatherReadingWriter $writer): ?WeatherReading
