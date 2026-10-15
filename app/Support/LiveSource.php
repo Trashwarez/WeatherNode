@@ -45,6 +45,7 @@ final class LiveSource
         'DWL' => ['WeatherLink Cloud v1', 'weatherlink'],
         'DWL_v2api' => ['WeatherLink Cloud v2', 'weatherlink'],
         'DWL_v2api_demo' => ['WeatherLink Cloud v2 (Demo Mode)', 'weatherlink'],
+        'wll_local' => ['WeatherLink Live (local network)', 'weatherlink'],
         'wf' => ['WeatherFlow', 'weatherflow'],
         'AWapi' => ['Ambient Weather API', 'ambient'],
         'netatmo' => ['Netatmo', 'netatmo'],

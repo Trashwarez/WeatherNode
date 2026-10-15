@@ -412,6 +412,11 @@ class FetchWeatherData extends Command
             return $this->unlessAlreadyStored($weatherLinkV1->fetch());
         }
 
+        // A WeatherLink Live on the owner's network: fresh every few seconds (#158).
+        if ($format === 'wll_local') {
+            return app(\App\Services\Weather\Sources\WeatherLinkLiveLocalAdapter::class)->fetch();
+        }
+
         if ($format === 'DWL_v2api' || $format === 'DWL_v2api_demo') {
             // Enable demo mode in settings if using demo format
             if ($format === 'DWL_v2api_demo') {
@@ -470,7 +475,7 @@ class FetchWeatherData extends Command
             return $writer->store($data);
         }
 
-        if (in_array($format, ['wu', 'wf', 'AWapi', 'netatmo', 'DWL', 'DWL_v2api', 'DWL_v2api_demo'], true)) {
+        if (in_array($format, ['wu', 'wf', 'AWapi', 'netatmo', 'DWL', 'DWL_v2api', 'DWL_v2api_demo', 'wll_local'], true)) {
             return $writer->store($data);
         }
 
